@@ -1,7 +1,3 @@
-
-
-
-
 // src/context/context.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
@@ -25,81 +21,81 @@ export const ProfileProvider = ({ children }) => {
   const [skillError, setSkillError] = useState(null);
 
   const [projects, setProjects] = useState(null);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState(null);
 
+  // ─── Combined "app is ready" flag ─────────────
+  const appReady = !loading && !aboutLoading && !skillLoading && !projectsLoading;
 
-  // ─── Fetch Profile (unchanged) ───────────────
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
         const res = await axios.get(`${API_URL}/api/profile`);
-        setProfile(res.data.data);   // ✅ your API returns { success, data: {...} }
+        setProfile(res.data.data);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, []);
 
-  // ─── Fetch Skills Me ───────────────────────────
   useEffect(() => {
     const fetchAboutMe = async () => {
       try {
-        // setAboutLoading(true);
+        setAboutLoading(true);
         const res = await axios.get(`${API_URL}/api/about-me`);
-        setAboutMe(res.data.data);   // ✅ your API returns { success, data: {...} }
+        setAboutMe(res.data.data);
       } catch (err) {
         setAboutError(err.message);
       } finally {
-        // setAboutLoading(false);
+        setAboutLoading(false);
       }
     };
-
     fetchAboutMe();
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchSkills = async () => {
       try {
-        // setSkillLoading(true);                                // ✅ Fix 2: was setAboutLoading
-        const res = await axios.get(`${API_URL}/api/skills`); // ✅ Fix 3: was /api/getskills
+        setSkillLoading(true);
+        const res = await axios.get(`${API_URL}/api/skills`);
         setSkills(res.data.data);
       } catch (err) {
-        setSkillError(err.message);                           // ✅ Fix 2: was setAboutError
+        setSkillError(err.message);
       } finally {
-        // setSkillLoading(false);                               // ✅ Fix 2: was setSkilLoading
+        setSkillLoading(false);
       }
     };
     fetchSkills();
   }, []);
 
-     useEffect(() => {
+  useEffect(() => {
     const fecthProjects = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/projects`); 
+        setProjectsLoading(true);
+        const res = await axios.get(`${API_URL}/api/projects`);
         setProjects(res.data.data);
       } catch (err) {
-        // setSkillError(err.message);                           
-      } 
+        setProjectsError(err.message);
+      } finally {
+        setProjectsLoading(false);
+      }
     };
     fecthProjects();
   }, []);
 
-
-  // ─── Update Profile (unchanged) ──────────────
   const updateProfile = async (updatedData) => {
     try {
       const res = await axios.put(`${API_URL}/api/profile`, updatedData);
-      setProfile(res.data.data);     // ✅ same fix here
+      setProfile(res.data.data);
     } catch (err) {
       setError(err.message);
     }
   };
 
-  // ─── Update About Me ──────────────────────────
   const updateAboutMe = async (updatedData) => {
     try {
       const res = await axios.put(`${API_URL}/api/about-me`, updatedData);
@@ -111,15 +107,14 @@ export const ProfileProvider = ({ children }) => {
 
   return (
     <ProfileContext.Provider value={{
-      // Profile (unchanged)
       profile,
       loading,
       error,
       updateProfile,
       projects,
-
-
-      // About Me
+      projectsLoading,
+      projectsError,
+      appReady,
       aboutMe,
       aboutLoading,
       aboutError,
@@ -127,14 +122,12 @@ export const ProfileProvider = ({ children }) => {
       skills,
       skillLoading,
       skillError,
-
     }}>
       {children}
     </ProfileContext.Provider>
   );
 };
 
-// ─── Hooks (unchanged) ────────────────────────
 export const useProfile = () => useContext(ProfileContext);
 export const useAboutMe = () => useContext(ProfileContext);
 export const useSkills = () => useContext(ProfileContext);
