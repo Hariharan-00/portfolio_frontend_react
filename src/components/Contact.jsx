@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
+import EmailIcon from "../../src/assets/icons/gmail.png";
+import Linkedin from "../../src/assets/icons/linkedin.png";
+import Github from "../../src/assets/icons/github.png";
+import SmartPhone from "../../src/assets/icons/smartphone.png"
+import VideoGif from "../../src/assets/animation/hariharan_fullstack_skills.gif";
+
 
 const Contact = () => {
   const ref = useRef(null);
   const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState({ loading: false, success: false, error: null });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -16,19 +22,37 @@ const Contact = () => {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Simulate send
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
-    setForm({ name: '', email: '', message: '' });
-  };
+
 
   const contacts = [
-    { icon: '📧', label: 'Email', value: 'alex.kumar@email.com', href: 'mailto:alex.kumar@email.com' },
-    { icon: '💼', label: 'LinkedIn', value: 'linkedin.com/in/alexkumar', href: '#' },
-    { icon: '🐙', label: 'GitHub', value: 'github.com/alexkumar', href: '#' },
-    { icon: '📱', label: 'Phone', value: '+91 98765 43210', href: 'tel:+919876543210' },
+    {
+      icon: EmailIcon,
+      label: 'Email',
+      value: 'hariharang441@gmail.com',
+      // href: 'mailto:hariharang441@gmail.com?subject=Inquiry%20from%20Portfolio', 
+      isExternal: true
+    },
+    {
+      icon: Linkedin,
+      label: 'LinkedIn',
+      value: 'linkedin.com/in/hariharan46',
+      href: 'https://www.linkedin.com/in/hariharan46/',
+      isExternal: true
+    },
+    {
+      icon: Github,
+      label: 'GitHub',
+      value: 'github.com/Hariharan-00',
+      href: 'https://github.com/Hariharan-00',
+      isExternal: true
+    },
+    {
+      icon: SmartPhone,
+      label: 'Phone',
+      value: '+91 9025122156',
+      href: 'tel:+919025122156',
+      isExternal: false
+    },
   ];
 
   return (
@@ -46,22 +70,24 @@ const Contact = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Left */}
+          {/* Left - Contact Info */}
           <div>
             <p className="text-gray-300 text-base leading-relaxed mb-8">
-              I'm currently open to new opportunities. Whether you have a project in mind, 
+              I'm currently open to new opportunities. Whether you have a project in mind,
               want to collaborate, or just want to say hi — my inbox is always open!
             </p>
 
-            {/* Contact info */}
             <div className="space-y-4 mb-8">
               {contacts.map((c, i) => (
                 <a
                   key={i}
                   href={c.href}
+                  target={c.isExternal ? '_blank' : '_self'}
+                  rel={c.isExternal ? 'noopener noreferrer' : undefined}
                   className="flex items-center gap-4 p-4 bg-[#080B12] border border-[#1E2535] rounded-xl hover:border-[#00FF94]/30 hover:bg-[#00FF94]/5 transition-all duration-200 group"
                 >
-                  <span className="text-2xl">{c.icon}</span>
+                  <img src={c.icon} alt="" className="h-6 w-6" />
+                  {/* <span className="text-2xl">Img={c.icon}</span> */}
                   <div>
                     <div className="font-mono text-xs text-gray-500 mb-0.5">{c.label}</div>
                     <div className="font-sans text-sm text-white group-hover:text-[#00FF94] transition-colors">{c.value}</div>
@@ -70,7 +96,17 @@ const Contact = () => {
               ))}
             </div>
 
-            {/* Availability badge */}
+            {/* Mobile-Friendly Quick Mail Link */}
+            <div className="mb-8 block sm:hidden">
+              <a
+                href="mailto:hariharang441@gmail.com?subject=Portfolio%20Contact"
+                className="inline-flex items-center justify-center w-full gap-2 p-3 bg-[#1E2535] text-[#00FF94] font-mono text-xs rounded-xl border border-[#00FF94]/30 hover:bg-[#00FF94]/10 transition-all"
+              >
+                 <img src={EmailIcon} alt="" className="h-6 w-6" /> Open Mail App Directly
+              </a>
+            </div>
+
+            {/* Availability Badge */}
             <div className="inline-flex items-center gap-3 bg-[#00FF94]/5 border border-[#00FF94]/20 rounded-xl px-5 py-3">
               <div className="w-2.5 h-2.5 rounded-full bg-[#00FF94] animate-pulse shadow-[0_0_8px_#00FF94]"></div>
               <div>
@@ -80,62 +116,19 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Right - Form */}
-          <div className="bg-[#080B12] border border-[#1E2535] rounded-2xl p-6 sm:p-8">
-            <div className="font-mono text-sm text-[#00FF94] mb-6">// send_message()</div>
+          {/* Right - video Section */}
+          {/* Right - video Section */}
+          <div className="bg-[#080B12] border border-[#1E2535] rounded-2xl p-6 sm:p-8 relative">
+            {/* <div className="font-mono text-sm text-[#00FF94] mb-6">
+              {"// hariharan.skills()"}
+            </div> */}
 
-            {sent ? (
-              <div className="flex flex-col items-center justify-center h-48 gap-4">
-                <div className="text-4xl">✅</div>
-                <div className="font-mono text-[#00FF94] text-center">Message sent successfully!</div>
-                <div className="font-sans text-gray-500 text-sm text-center">I'll get back to you shortly.</div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="font-mono text-xs text-gray-500 block mb-1.5">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your name"
-                    className="w-full bg-[#0D1117] border border-[#1E2535] rounded-lg px-4 py-3 text-white text-sm font-sans placeholder-gray-600 focus:outline-none focus:border-[#00FF94]/50 focus:ring-1 focus:ring-[#00FF94]/20 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="font-mono text-xs text-gray-500 block mb-1.5">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="your@email.com"
-                    className="w-full bg-[#0D1117] border border-[#1E2535] rounded-lg px-4 py-3 text-white text-sm font-sans placeholder-gray-600 focus:outline-none focus:border-[#00FF94]/50 focus:ring-1 focus:ring-[#00FF94]/20 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="font-mono text-xs text-gray-500 block mb-1.5">Message</label>
-                  <textarea
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    placeholder="Tell me about your project..."
-                    className="w-full bg-[#0D1117] border border-[#1E2535] rounded-lg px-4 py-3 text-white text-sm font-sans placeholder-gray-600 focus:outline-none focus:border-[#00FF94]/50 focus:ring-1 focus:ring-[#00FF94]/20 transition-all resize-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-[#00FF94] text-[#080B12] font-mono font-bold text-sm py-3 rounded-lg hover:bg-white transition-all duration-200 tracking-wider"
-                >
-                  SEND MESSAGE →
-                </button>
-              </form>
-            )}
+            <img
+              src={VideoGif}
+              alt="Hariharan V - Full Stack Developer skills"
+              className="w-full h-full rounded-xl border border-[#1E2535]"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>

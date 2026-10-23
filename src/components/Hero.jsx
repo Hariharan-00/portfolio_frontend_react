@@ -65,7 +65,7 @@ const stats = [
             {/* Available badge */}
             <div className="inline-flex items-center gap-2 font-mono text-xs text-[#00FF94] border border-[#00FF94]/30 px-4 py-2 rounded-full mb-6 bg-[#00FF94]/5">
               <span className="w-2 h-2 rounded-full bg-[#00FF94] animate-pulse"></span>
-              {profile?.availability ?? 'Available for work'}
+              {profile?.availability === true  ? 'Available for work':""}
             </div>
 
             {/* Name */}

@@ -143,3 +143,30 @@ body {
   transition: width 0.3s ease;
 }
 .nav-link:hover::after { width: 100%; }
+
+/* Robot runs from Contact to the Resume button, then disappears into it */
+@keyframes robot-run {
+  0%   { transform: translateX(0); opacity: 0; }
+  8%   { opacity: 1; }
+  80%  { transform: translateX(var(--run-dist, 160px)); opacity: 1; }
+  92%, 100% { transform: translateX(var(--run-dist, 160px)); opacity: 0; }
+}
+.robot-run { animation: robot-run 4.5s ease-in-out infinite; }
+
+/* running motion */
+@keyframes robot-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.robot-bob { animation: robot-bob 0.35s ease-in-out infinite; }
+
+@keyframes leg-a { 0%, 100% { transform: rotate(28deg); } 50% { transform: rotate(-28deg); } }
+@keyframes leg-b { 0%, 100% { transform: rotate(-28deg); } 50% { transform: rotate(28deg); } }
+.robot-leg-a, .robot-leg-b { transform-box: fill-box; transform-origin: top center; }
+.robot-leg-a { animation: leg-a 0.35s ease-in-out infinite; }
+.robot-leg-b { animation: leg-b 0.35s ease-in-out infinite; }
+
+/* button pulses when the robot arrives (same 4.5s cycle) */
+@keyframes resume-ping {
+  0%, 78%  { box-shadow: 0 0 0 0 rgba(0, 255, 148, 0); }
+  84%      { box-shadow: 0 0 0 0 rgba(0, 255, 148, 0.7); }
+  100%     { box-shadow: 0 0 0 14px rgba(0, 255, 148, 0); }
+}
+.resume-ping { animation: resume-ping 4.5s ease-in-out infinite; }
