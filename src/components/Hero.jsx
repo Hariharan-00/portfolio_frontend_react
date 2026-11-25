@@ -12,42 +12,42 @@ const Hero = () => {
   const [deleting, setDeleting] = useState(false);
   const [charIndex, setCharIndex] = useState(0);
 
-const roles = profile?.roles || [];
+  const roles = profile?.roles || [];
 
-useEffect(() => {
-  if (roles.length === 0) return; // 🛑 STOP if no roles
+  useEffect(() => {
+    if (roles.length === 0) return; // 🛑 STOP if no roles
 
-  const current = roles[roleIndex] || "";
-  let timeout;
+    const current = roles[roleIndex] || "";
+    let timeout;
 
-  if (!deleting && charIndex < current.length) {
-    timeout = setTimeout(() => {
-      setDisplayed(current.substring(0, charIndex + 1));
-      setCharIndex(c => c + 1);
-    }, 80);
+    if (!deleting && charIndex < current.length) {
+      timeout = setTimeout(() => {
+        setDisplayed(current.substring(0, charIndex + 1));
+        setCharIndex(c => c + 1);
+      }, 80);
 
-  } else if (!deleting && charIndex === current.length) {
-    timeout = setTimeout(() => setDeleting(true), 2000);
+    } else if (!deleting && charIndex === current.length) {
+      timeout = setTimeout(() => setDeleting(true), 2000);
 
-  } else if (deleting && charIndex > 0) {
-    timeout = setTimeout(() => {
-      setDisplayed(current.substring(0, charIndex - 1));
-      setCharIndex(c => c - 1);
-    }, 40);
+    } else if (deleting && charIndex > 0) {
+      timeout = setTimeout(() => {
+        setDisplayed(current.substring(0, charIndex - 1));
+        setCharIndex(c => c - 1);
+      }, 40);
 
-  } else if (deleting && charIndex === 0) {
-    setDeleting(false);
-    setRoleIndex(r => roles.length ? (r + 1) % roles.length : 0);
-  }
+    } else if (deleting && charIndex === 0) {
+      setDeleting(false);
+      setRoleIndex(r => roles.length ? (r + 1) % roles.length : 0);
+    }
 
-  return () => clearTimeout(timeout);
-}, [charIndex, deleting, roleIndex, roles]);
+    return () => clearTimeout(timeout);
+  }, [charIndex, deleting, roleIndex, roles]);
   // Stats built from profile data
-const stats = [
-  { num: `${profile?.yearsOfExperience ?? 2}+`,  label: 'Years Exp.'  },
-  { num: `${profile?.totalProjects ?? 18}+`,     label: 'Projects'    },
-  { num: profile?.title ?? 'Full Stack',         label: 'Role'        },
-];
+  const stats = [
+    { num: `${profile?.yearsOfExperience ?? 2}+`, label: 'Years Exp.' },
+    { num: `${profile?.totalProjects ?? 18}+`, label: 'Projects' },
+    { num: profile?.title ?? 'Full Stack', label: 'Role' },
+  ];
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg">
@@ -63,16 +63,16 @@ const stats = [
           <div className="flex-1 text-center lg:text-left">
 
             {/* Available badge */}
-            <div className="inline-flex items-center gap-2 font-mono text-xs text-[#00FF94] border border-[#00FF94]/30 px-4 py-2 rounded-full mb-6 bg-[#00FF94]/5">
+            {/* <div className="inline-flex items-center gap-2 font-mono text-xs text-[#00FF94] border border-[#00FF94]/30 px-4 py-2 rounded-full mb-6 bg-[#00FF94]/5">
               <span className="w-2 h-2 rounded-full bg-[#00FF94] animate-pulse"></span>
-              {profile?.availability === true  ? 'Available for work':""}
-            </div>
+              {profile?.availability === true ? 'Available for work' : ""}
+            </div> */}
 
             {/* Name */}
             <h1 className="font-sans font-black text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-white leading-tight mb-3">
               Hello, I'm<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FF94] to-[#00D4FF]">
-                {profile?.name }
+                {profile?.name}
               </span>
             </h1>
 
@@ -132,7 +132,7 @@ const stats = [
                   <img
                     src={ProfileImage}
                     alt={profile?.name || "profile"}
-                   className="w-full h-full object-cover object-top rounded-full"
+                    className="w-full h-full object-cover object-top rounded-full"
                   />
                 ) : (
                   <div className="text-center">
@@ -143,11 +143,26 @@ const stats = [
               </div>
 
               {/* Floating badges — dynamic */}
-              <div className="absolute -top-2 -right-4 bg-[#0D1117] border border-[#00FF94]/30 rounded-lg px-3 py-1.5 font-mono text-xs text-[#00FF94] shadow-lg animate-bounce" style={{ animationDuration: '3s' }}>
-                {profile?.topSkill ?? 'React'} ⚡
+              {/* Floating badges — dynamic */}
+              <div
+                className="absolute -top-2 -right-4 bg-[#0D1117] border border-[#00FF94]/30 rounded-lg px-3 py-1.5 font-mono text-xs text-[#00FF94] shadow-lg animate-bounce"
+                style={{ animationDuration: '3s' }}
+              >
+                {profile?.topSkill ?? 'React'} ⚛️
               </div>
-              <div className="absolute -bottom-2 -left-4 bg-[#0D1117] border border-[#00D4FF]/30 rounded-lg px-3 py-1.5 font-mono text-xs text-[#00D4FF] shadow-lg animate-bounce" style={{ animationDuration: '4s' }}>
-                {profile?.totalProjects ?? ''} Projects 🚀
+
+              <div
+                className="absolute -bottom-2 -left-4 bg-[#0D1117] border border-[#00D4FF]/30 rounded-lg px-3 py-1.5 font-mono text-xs text-[#00D4FF] shadow-lg animate-bounce"
+                style={{ animationDuration: '4s' }}
+              >
+                Node 🟢
+              </div>
+
+              <div
+                className="absolute -bottom-2 -right-4 bg-[#0D1117] border border-[#00ED64]/30 rounded-lg px-3 py-1.5 font-mono text-xs text-[#00ED64] shadow-lg animate-bounce"
+                style={{ animationDuration: '3.5s' }}
+              >
+                MongoDB 🍃
               </div>
             </div>
           </div>

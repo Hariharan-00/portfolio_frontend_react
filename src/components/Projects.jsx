@@ -70,11 +70,10 @@ const Projects = () => {
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`font-mono text-xs px-4 py-2 rounded-full border transition-all duration-200 ${
-                activeFilter === f
+              className={`font-mono text-xs px-4 py-2 rounded-full border transition-all duration-200 ${activeFilter === f
                   ? "bg-[#00FF94] text-[#080B12] border-[#00FF94] font-bold"
                   : "border-[#1E2535] text-gray-400 hover:border-[#00FF94]/30 hover:text-white"
-              }`}
+                }`}
             >
               {f}
             </button>
@@ -84,9 +83,20 @@ const Projects = () => {
         {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayed.map((p, i) => (
+            // <div
+            //   key={p._id}
+            //   className="card-hover group bg-[#0D1117] border border-[#1E2535] rounded-2xl p-6 cursor-pointer"
+            //   style={{ borderColor: `${p.color}15` }}
+            // >
             <div
               key={p._id}
-              className="card-hover group bg-[#0D1117] border border-[#1E2535] rounded-2xl p-6 cursor-pointer"
+              onClick={() => {
+                if (p.urls?.live) {
+                  window.open(p.urls.live, "_blank", "noopener,noreferrer");
+                }
+              }}
+              className={`card-hover group bg-[#0D1117] border border-[#1E2535] rounded-2xl p-6 ${p.urls?.live ? "cursor-pointer" : "cursor-default"
+                }`}
               style={{ borderColor: `${p.color}15` }}
             >
               {/* Header */}

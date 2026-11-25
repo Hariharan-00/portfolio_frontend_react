@@ -8,30 +8,27 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import Loader from './components/Loader';
-
-// Minimum time (ms) the loader stays on screen so it never just flashes
-// on a fast connection — feels intentional instead of a glitch.
-const MIN_LOADER_MS = 900;
+import LoaderGif from './assets/animation/loading.gif';
 
 function AppContent() {
-  const {
-    appReady,
-    loading,         // profile
-    aboutLoading,    // about-me
-    skillLoading,    // skills
-    projectsLoading, // projects
-  } = useProfile();
+  const { appReady, loading, aboutLoading, skillLoading, projectsLoading } =
+    useProfile();
 
-  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(true);
 
-  useEffect(() => {
-    const t = setTimeout(() => setMinTimeElapsed(true), MIN_LOADER_MS);
-    return () => clearTimeout(t);
-  }, []);
+  const steps = [!loading, !aboutLoading, !skillLoading, !projectsLoading];
+  const done = steps.filter(Boolean).length;
+  const target = appReady ? 100 : Math.min(Math.round((done / steps.length) * 100), 90);
 
-  const isReady = appReady && minTimeElapsed;
+  useEffect(() => {
+    const id = setInterval(() => {
+      setProgress((p) => (p < target ? p + 1 : p));
+    }, 15);
+    return () => clearInterval(id);
+  }, [target]);
+
+  const isReady = appReady && progress >= 100;
 
   useEffect(() => {
     if (!isReady) return;
@@ -39,18 +36,27 @@ function AppContent() {
     return () => clearTimeout(t);
   }, [isReady]);
 
-  const loaderStatus = {
-    profile: !loading,
-    about: !aboutLoading,
-    skills: !skillLoading,
-    projects: !projectsLoading,
-  };
-
   return (
     <div className="noise min-h-screen bg-[#080B12]">
       {showLoader && (
-        <div className={isReady ? 'loader-exit' : ''}>
-          <Loader status={loaderStatus} />
+        <div
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-[#080B12] ${
+            isReady ? 'loader-exit' : ''
+          }`}
+        >
+          <img src={LoaderGif} alt="Loading" className="h-32 w-32 object-contain" />
+
+          <div className="w-64 sm:w-80">
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#30C3B3]/15">
+              <div
+                className="h-full rounded-full bg-[#30C3B3] shadow-[0_0_10px_rgba(48,195,179,0.6)] transition-[width] duration-100 ease-linear"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className="mt-3 text-center text-sm font-medium tabular-nums text-[#30C3B3]">
+              {progress}%
+            </p>
+          </div>
         </div>
       )}
 
